@@ -70,7 +70,7 @@
 
 ### Решение:
 
-Устанавливаем MicroK8S
+Устанавливаем MicroK8S:
 
 ![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_001.png)
 
@@ -80,12 +80,109 @@
 
 ![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_004.png)
 
+Активируем Дашборд:
+
+```bash
+microk8s enable dashboard
+```
+
+Зайдем в папку .kube и посмотрим конфиг:
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_005.png)
+
+Затем открываем конфиг nano /var/snap/microk8s/current/certs/csr.conf.template и дописываем ip адрес нашей машины клиента kubectl с которой будем управлять кластером
+Прописывается адрес удаленной машины для того чтобы она смогла подключаться к мастеру microk8s
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_014.png)
+
+Далее делаем проброс на всю сеть:
+
+```bash
+microk8s kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443 --address 0.0.0.0
+```
+
+Видим что коннект открылся:
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_006.png)
+
+Генерируем сертификат для подключения:
+
+```bash
+sudo microk8s refresh-certs --cert front-proxy-client.crt
+```
+
+Заходим в веб интерфейс нашей виртуалки и видим что он требует токен авторизации:
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_007.png)
+
+Командой:
+
+```bash
+microk8s kubectl create token default
+```
+
+Генерируем токен и копируем его в веб интерфейс, и видим наш работающий дашборд:
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_008.png)
+
 ------
 
 ### Задание 2. Установка и настройка локального kubectl
 1. Установить на локальную машину kubectl.
 2. Настроить локально подключение к кластеру.
 3. Подключиться к дашборду с помощью port-forward.
+
+### Решение:
+
+Устанавливаем kubectl на клиентскую машину для управления кластером:
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_009.png)
+
+Создадим папку .kube и в ней создадим файлик config ТОЧНО ТАКОЙ ЖЕ КАК И НА МАСТЕР СЕРВЕРЕ
+Заполняем его содержимым файлика config с мастер сервера и видим что прописан будет наш мастер в конфиге.
+
+Теперь на клиенте выполняем:
+
+```bash
+kubectl get nodes
+```
+
+и видим что у нас подтянулась наша мастер нода
+
+Далее выполняем команду:
+
+```bash
+kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443 --address 0.0.0.0
+```
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_010.png)
+
+И видим что на нашем айпиадресе клиента, запустился тот же самый дашборд что работает на ip адресе мастера:
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_011.png)
+
+Это значит что кластер работает верно.
+Теперь опять генерируем токен на машине мастера.
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_012.png)
+
+И заходим под этим токеном в В ЛЮБОЙ ВЕБ ИНТЕРФЕЙС так как это кластер
+Я сгенерировал на мастер ноде, и авторизовался на kubectl клиент ноде
+И теперь зайди по ip адресу КЛИЕНТСКОЙ МАШИНЫ мы видим наш мастер microk8s
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_013.png)
+
+
+
+
+
+
+
+
+
+
+
+
 
 ------
 
