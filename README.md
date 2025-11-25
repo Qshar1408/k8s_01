@@ -69,8 +69,16 @@
 
 
 ### Решение:
+
 Устанавливаем MicroK8S
+
 ![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_001.png)
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_002.png)
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_003.png)
+
+![k8s_01](https://github.com/Qshar1408/k8s_01/blob/main/img/k8s_01_004.png)
 
 ------
 
